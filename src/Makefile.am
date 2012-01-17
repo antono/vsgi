@@ -1,23 +1,15 @@
-NULL = 
-
-AM_CPPFLAGS = \
-	$(VSGI_CFLAGS) \
-	-include $(CONFIG_HEADER) \
-	$(NULL)
+AM_CPPFLAGS = $(VSGI_CFLAGS)
 
 lib_LTLIBRARIES = libvsgi-1.0.la
 
-libvsgi_1_0_la_SOURCES = \
-	main.vala \
-	$(NULL)
+libvsgi_1_0_la_VALAFLAGS = \
+	--library vsgi \
+	--gir Vsgi-1.0.gir \
+	--vapi vsgi-1.0.vapi \
+	-H vsgi.h
 
-libvsgi_1_0_la_LIBADD = \
-	$(VSGI_LIBS) \
-	$(NULL)
+libvsgi_1_0_la_SOURCES = $(wildcad *.vala)
 
-EXTRA_DIST = \
-	$(NULL)
+libvsgi_1_0_la_LIBADD = $(VSGI_LIBS)
 
-DISTCLEANFILES = \
-	$(NULL)
-
+CLEANFILES = *.c *.gir *.vapi *.h *.stamp *.in Makefile

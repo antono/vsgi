@@ -1,0 +1,8 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: vsgi-1.0
+Description: Vala Server Gateway Interface
+Version: @VERSION@

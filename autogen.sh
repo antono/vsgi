@@ -1,9 +1,9 @@
 #!/bin/sh
 # Run this to generate all the initial makefiles, etc.
 
-srcdir=`dirname $0`
-test -z "$srcdir" && srcdir=.
+autoreconf --force \
+    --install \
+    -Wall,error \
+    --include=./.autocrap
 
-PKG_NAME="vsgi"
-
-. gnome-autogen.sh
+./configure

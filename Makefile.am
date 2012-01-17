@@ -1,33 +1,16 @@
-NULL = 
+ACLOCAL_AMFLAGS = -I./.autocrap
 
-#Build in these directories:
+SUBDIRS = src test
 
-SUBDIRS = \
-	src \
-	po \
-	$(NULL)
+pkgconfig_DATA= vsgi-1.0.pc
+pkgconfigdir = $(libdir)/pkgconfig
 
 vsgidocdir = ${prefix}/doc/vsgi
-vsgidoc_DATA = \
-	ChangeLog \
-	README \
-	COPYING \
-	AUTHORS \
-	INSTALL \
-	NEWS\
-	$(NULL)
+vsgidoc_DATA = README.md COPYING
 
-EXTRA_DIST = \
-	$(vsgidoc_DATA) \
-	intltool-extract.in \
-	intltool-merge.in \
-	intltool-update.in\
-	$(NULL)
+EXTRA_DIST = $(vsgidoc_DATA) ./autogen.sh
+DISTCLEANFILES =
 
-DISTCLEANFILES = \
-	intltool-extract \
-	intltool-merge \
-	intltool-update \
-	po/.intltool-merge-cache \
-	$(NULL)
-
+CLEANFILES = *.log *.status \
+	./configure vsgi-1.0.pc libtool \
+	Makefile.in aclocal.m4 Makefile

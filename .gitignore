@@ -1,0 +1,61 @@
+# http://www.gnu.org/software/automake
+
+Makefile.in
+Makefile
+
+# http://www.gnu.org/software/autoconf
+
+/autom4te.cache
+/aclocal.m4
+/compile
+/configure
+/depcomp
+/install-sh
+/missing
+
+TAGS
+config.guess
+config.h
+config.h.in
+config.log
+config.sub
+config.status
+ltmain.sh
+libtool
+
+**/.deps/*
+**/.libs/*
+src/libvsgi_1_0_la_vala.stamp
+src/main.c
+stamp-h1
+
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+.elc
+auto-save-list
+tramp
+
+# vim
+.\#*
+.*.sw[a-z]
+*.un~
+Session.vim
+
+vsgi-1.0.pc
