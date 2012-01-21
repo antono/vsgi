@@ -14,25 +14,94 @@ Unified Web Server Interface for Vala.
   [spec](http://wiki.commonjs.org/wiki/JSGI/Level0/A/Draft2)
   for CommonJS
 
+
+## Goals
+
+The goal of this standartization is stackable apps/middleware:
+
+```
+   Request   Response
+      |         |
+    (App1)   (App1)
+      |         |
+     ...       ...
+      |         |
+    (AppN)   (AppN)
+      \......../
+
+```
+
+First column is Request processing and second is Resposne
+processing.
+
+In this scheme `App1` may perform Etag generation, `App2`
+may handle HTTP authentication `App3` may perform request
+logging and so on. App = Middleware in this case. Each app
+may stop the chain and return response if needed. This way
+each VSGI conforming App may be dropped in your VSGI app
+and reused consistently.
+
+This allows us to mount modules on different urls as (pseudocode):
+
+    app.use(CookieSessionStore)
+    app.use(HttpCaching)
+    app.mount('/login', AuthenticationApp)
+    app.mount('/forum', ForumApp)
+
+
+Also. It should be possible to mout VSGI middleware/apps into existing
+python/ruby/javascript apps with thin integration for JSGI, Rack and WSGI.
+
+
+
+
+
 ## Specification
 
-## VSGI.App
+```vala
+interface VSGI.App {
+    public virtual void process_request(Request req);
+    public virtual void process_response(Response res);
+}
+```
 
-A VSGI application is an object instance that implements 
-VSGI.App interface.
 
-VSGI Middleware are VSGI Applications that can call other
-VSGI Applications. Middleware can be stacked up into a
-call chain to provide useful services to Requests and Responses.
+In real apps it should work like:
 
-## VSGI.Env
+```vala
+var apps = new Array<VSGI.App>();
+
+// ... setup and push some apps
+
+var req = new VSGI.Request();
+
+foreach (app in apps) {
+   app.process_request (req);
+}
+
+var res = new VSGI.Response();
+
+foreach (app in apps.reverse()) {
+   app.process_response(res);
+}
+```
+
+
+In each case `Request` and `Response` are adapter specific
+but work consistently for CGI, FastCGI, uWSGI, SCGI and Soup.
+
+Internally `Request` and `Response` modify variables from
+`VSGI.Environment`.
+
+
+## VSGI.Envirnoment
 
 ### Variables
 
-The environment must be an instance of `GHashTable` that includes
-CGI-like headers. The application is free to modify the environment.
-The environment is required to include these variables except
-when they’d be empty:
+The environment must be an instance of
+[GLib.HashTable][HashTable] that includes CGI-like headers. The
+application is free to modify the environment.  The environment is
+required to include these variables except when they’d be empty:
 
 - REQUEST\_METHOD: The HTTP request method, such as "GET" or "POST".
   This cannot ever be an empty string, and so is always required.
@@ -58,11 +127,6 @@ when they’d be empty:
   The presence or absence of these variables should correspond with
   the presence or absence of the appropriate HTTP header in the request.
 
-### The Input Stream
-
-The input stream implements
-[GLib.InputStream](http://www.valadoc.org/gio-2.0/GLib.InputStream.html)
-interface which contains the raw HTTP POST data.
 
 ## The Response
 
@@ -71,3 +135,6 @@ Should implement VSGI.Response interface.
 ## The Request
 
 Should implement VSGI.Request interface.
+
+
+[HashTable]: http://www.valadoc.org/glib-2.0/GLib.HashTable.html
