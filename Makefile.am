@@ -1,5 +1,3 @@
-ACLOCAL_AMFLAGS = -I./.autocrap
-
 SUBDIRS = src test
 
 pkgconfig_DATA= vsgi-1.0.pc
